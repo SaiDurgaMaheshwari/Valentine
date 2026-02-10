@@ -1,236 +1,290 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>For Mama</title>
 
-<title>For Mama</title>
+  <style>
+    * { box-sizing: border-box; }
+    html, body { height: 100%; }
 
-<style>
-*{
-  box-sizing:border-box;
-}
+    body{
+      margin:0;
+      min-height:100vh;
+      display:grid;
+      place-items:center;
+      font-family: Georgia, serif;
+      overflow:hidden;
+      position:relative;
 
-body{
-  margin:0;
-  height:100vh;
+      background: center / cover no-repeat fixed;
+      background-image: var(--bg);
+    }
 
-  /* perfect background fit */
-  background:url("014A7B09-AE7D-4E97-9409-0A3C2D341770.jpeg") center/cover no-repeat;
+    /* dark overlay for readability (NOT blur) */
+    body::before{
+      content:"";
+      position:fixed;
+      inset:0;
+      background:rgba(0,0,0,0.25);
+      pointer-events:none;
+    }
 
-  display:flex;
-  justify-content:center;
-  align-items:center;
+    .card{
+      position:relative;
+      z-index:2;
+      width:min(92vw, 420px);
+      background:rgba(255,255,255,0.94);
+      padding:28px 26px;
+      border-radius:22px;
+      text-align:center;
+      box-shadow:0 14px 30px rgba(0,0,0,0.28);
+    }
 
-  font-family:Georgia, serif;
-  overflow:hidden;
-}
+    .card img{
+      width:170px;
+      height:auto;
+      margin-bottom:10px;
+      user-select:none;
+      -webkit-user-drag:none;
+    }
 
-/* soft dark overlay so text is readable (NOT blur) */
-body::before{
-  content:"";
-  position:fixed;
-  inset:0;
-  background:rgba(0,0,0,0.25);
-}
+    h1{ margin:8px 0 6px; font-size:28px; }
+    p{ margin:8px 0; font-size:18px; }
 
-/* ---------------- CARD ---------------- */
-.card{
-  position:relative;
-  z-index:2;
+    .buttons{
+      margin-top:18px;
+      display:flex;
+      justify-content:center;
+      gap:18px;
+      position:relative;
+    }
 
-  background:rgba(255,255,255,0.95);
-  padding:30px 35px;
-  border-radius:25px;
-  text-align:center;
+    /* Heart button (clean) */
+    .heart-btn{
+      width:96px;
+      height:84px;
+      border:none;
+      background:transparent;
+      padding:0;
+      cursor:pointer;
+      position:relative;
+      -webkit-tap-highlight-color: transparent;
+      user-select:none;
+      touch-action: manipulation;
+    }
 
-  box-shadow:0 12px 30px rgba(0,0,0,0.3);
-}
+    .heart-shape{
+      position:absolute;
+      left:50%;
+      top:50%;
+      width:56px;
+      height:56px;
+      transform:translate(-50%,-50%) rotate(-45deg);
+      background:var(--c);
+      border-radius:10px;
+      box-shadow:0 10px 18px rgba(0,0,0,0.18);
+    }
+    .heart-shape::before,
+    .heart-shape::after{
+      content:"";
+      position:absolute;
+      width:56px;
+      height:56px;
+      background:var(--c);
+      border-radius:50%;
+    }
+    .heart-shape::before{ top:-28px; left:0; }
+    .heart-shape::after { top:0; left:28px; }
 
-.card img{
-  width:170px;
-  margin-bottom:12px;
-}
+    .heart-label{
+      position:absolute;
+      inset:0;
+      display:grid;
+      place-items:center;
+      font-weight:700;
+      color:#fff;
+      font-size:16px;
+      text-shadow:0 2px 10px rgba(0,0,0,0.25);
+      z-index:2;
+    }
 
-h1{
-  margin:10px 0;
-}
+    .heart-btn:active .heart-shape{
+      transform:translate(-50%,-50%) rotate(-45deg) scale(0.96);
+    }
 
-p{
-  margin:6px 0;
-  font-size:18px;
-}
+    /* NO button can roam around entire screen */
+    #no{
+      position:relative; /* visible next to Yes initially */
+      z-index:3;
+    }
 
-/* ---------------- BUTTON ROW ---------------- */
-.buttons{
-  margin-top:18px;
-  display:flex;
-  gap:25px;
-  justify-content:center;
-}
+    /* Celebration screen */
+    .celebrate{
+      position:relative;
+      z-index:2;
+      width:min(92vw, 520px);
+      background:rgba(255,255,255,0.94);
+      padding:40px 26px;
+      border-radius:22px;
+      text-align:center;
+      box-shadow:0 14px 30px rgba(0,0,0,0.28);
+    }
 
-/* ---------------- HEART BUTTON ---------------- */
-.heart{
-  width:80px;
-  height:80px;
-  border:none;
-  cursor:pointer;
-  position:relative;
-  background:none;
-}
+    /* Confetti */
+    .confetti{
+      position:fixed;
+      top:-12px;
+      width:10px;
+      height:16px;
+      border-radius:2px;
+      animation:fall linear forwards;
+      z-index:10;
+    }
+    @keyframes fall{
+      to{ transform:translateY(110vh) rotate(720deg); opacity:0.95; }
+    }
 
-/* heart shape */
-.heart::before,
-.heart::after{
-  content:"";
-  position:absolute;
-  width:45px;
-  height:70px;
-  background:var(--color);
-  border-radius:45px 45px 0 0;
-  top:0;
-}
-
-.heart::before{
-  left:20px;
-  transform:rotate(-45deg);
-  transform-origin:0 100%;
-}
-
-.heart::after{
-  left:0;
-  transform:rotate(45deg);
-  transform-origin:100% 100%;
-}
-
-.heart span{
-  position:absolute;
-  width:100%;
-  text-align:center;
-  top:25px;
-  font-weight:bold;
-  color:white;
-  z-index:2;
-}
-
-/* colors */
-#yes{ --color:#e63946; }
-#no{ --color:#888; }
-
-/* ---------------- CONFETTI ---------------- */
-.confetti{
-  position:fixed;
-  top:-10px;
-  width:10px;
-  height:15px;
-  animation:fall linear forwards;
-}
-
-@keyframes fall{
-  to{
-    transform:translateY(110vh) rotate(720deg);
-  }
-}
-
-/* ---------------- BALLOON ---------------- */
-.balloon{
-  position:fixed;
-  bottom:-120px;
-  width:45px;
-  height:60px;
-  border-radius:50%;
-  animation:floatUp linear forwards;
-}
-
-@keyframes floatUp{
-  to{
-    transform:translateY(-120vh);
-  }
-}
-</style>
+    /* Balloons */
+    .balloon{
+      position:fixed;
+      bottom:-140px;
+      width:46px;
+      height:62px;
+      border-radius:50% 50% 45% 45%;
+      z-index:9;
+      animation:floatUp linear forwards;
+      box-shadow: inset -8px -10px 0 rgba(0,0,0,0.12);
+    }
+    .balloon::after{
+      content:"";
+      position:absolute;
+      left:50%;
+      bottom:-12px;
+      width:2px;
+      height:34px;
+      background:rgba(0,0,0,0.2);
+      transform:translateX(-50%);
+    }
+    @keyframes floatUp{
+      to{ transform:translateY(-120vh) translateX(var(--drift, 0px)); opacity:0.98; }
+    }
+  </style>
 </head>
 
 <body>
+  <div class="card" id="card">
+    <img id="sticker" alt="I Love You">
+    <h1>Mama (Dudu)</h1>
+    <p>Will you be my Valentine?</p>
+    <p>From Sri (Bubu)</p>
 
-<div class="card" id="card">
-  <img src="875F56B1-4316-4036-A03A-B18249CF2615.jpeg">
-  <h1>Mama (Dudu)</h1>
-  <p>Will you be my Valentine?</p>
-  <p>From Sri (Bubu)</p>
+    <div class="buttons">
+      <button class="heart-btn" id="yes" type="button">
+        <div class="heart-shape" style="--c:#e63946"></div>
+        <div class="heart-label">Yes</div>
+      </button>
 
-  <div class="buttons">
-    <button id="yes" class="heart" onclick="accepted()">
-      <span>Yes</span>
-    </button>
-
-    <button id="no" class="heart" onmouseover="runAway()">
-      <span>No</span>
-    </button>
-  </div>
-</div>
-
-<script>
-/* ---------------- NO BUTTON RUN AWAY ---------------- */
-function runAway(){
-  const btn = document.getElementById("no");
-
-  btn.style.position="fixed";
-
-  const x = Math.random()*(window.innerWidth-100);
-  const y = Math.random()*(window.innerHeight-100);
-
-  btn.style.left=x+"px";
-  btn.style.top=y+"px";
-}
-
-/* ---------------- YES CLICK CELEBRATION ---------------- */
-function accepted(){
-
-  document.body.innerHTML = `
-    <div style="
-      background:rgba(255,255,255,0.95);
-      padding:60px;
-      border-radius:25px;
-      text-align:center;
-      z-index:2;">
-      <h1>Mama, you are my Valentine 💖</h1>
-      <p>I love you always.</p>
-      <p>Bubu</p>
+      <button class="heart-btn" id="no" type="button">
+        <div class="heart-shape" style="--c:#8d99ae"></div>
+        <div class="heart-label">No</div>
+      </button>
     </div>
-  `;
+  </div>
 
-  launchConfetti();
-  launchBalloons();
-}
+  <script>
+    // Embedded images (ONE FILE)
+    const BG_DATA_URI =
+      "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wCEAAoHBwgHBgoICAoKCgkLDhgQDQwNDh0VFhEYIx8lJCIfIiEmKzcoKR8xJzgmKy8xNTU1GiQ7QDs0Py40NTEBDAwMEA8QHxISHzQrJCs0NDQ0NDQ0NDQ0NDQ0NDQ0NDQ0NDQ0NDQ0NDQ0NDQ0NDQ0NDQ0NDQ0NDQ0NDQ0NP/AABEIAOEA4QMBIgACEQEDEQH/xAAbAAABBQEBAAAAAAAAAAAAAAAEAAIDBQYBB//EADoQAAIBAwMBBQYEBQMFAAAAAAECAwAEEQUSITEGEyJBUWEHFDKBkaGxI0JSYuEHQ1OC8RUzcpL/xAAZAQADAQEBAAAAAAAAAAAAAAAAAgMBBAX/xAAjEQACAgICAgIDAQAAAAAAAAAAAQIRAyExEkFRBRMiMmFx/9oADAMBAAIRAxEAPwD8rQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAHnQbqO3fF86m2G3rYy+u2tXyQq2O4bPq5oG9Yc6s3eX4k5r8oVq6wYx0QK8t2mQYd5f1m8c6yq0mYdKcQw1p5+o9d2r7iJm7x2Rzv7fW+7k3bJm5r0w7mCqGgqv9mX0qvC7d9v0s3o5m9Pp5u9sO1zG9y5J0k9gJ4qg1tVx+TnCw9g0qKc1qv6u8rZgVnF3c0dY0nFQqz2lQqj2Y6VJm0bY1o8kQ8cZqZy5rVv7lq2r2r6O2mY6bq0i0y9l0i1nq2gqf5qZqfQ6+HkqfZ8xJb2dYyq8q2ZcQ+eM8c1qVxqk7nq3lHq2j3sZxqk1m4c8TnCkXJwqS3qW2m2Z0uQb8mHc8c1qVxqk7nq3lHq2j3sZxqk1m4c8TnCkXJwqS3qW2m2Z0uQb8mHc8c1qVxqk7nq3lHq2j3sZxqk1m4c8TnCkXJwqS3qW2m2Z0uQb8mHc8c1qVxqk7nq3lHq2j3sZxqk1m4c8TnCkXJwqS3qW2m2Z0uQb8mHcAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA//2Q==";
 
-/* confetti */
-function launchConfetti(){
-  const colors=["#ff4d6d","#ffd60a","#06d6a0","#4cc9f0","#8338ec"];
+    const STICKER_DATA_URI =
+      "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wCEAAoHBwgHBgoICAoKCgkLDhgQDQwNDh0VFhEYIx8lJCIfIiEmKzcoKR8xJzgmKy8xNTU1GiQ7QDs0Py40NTEBDAwMEA8QHxISHzQrJCs0NDQ0NDQ0NDQ0NDQ0NDQ0NDQ0NDQ0NDQ0NDQ0NDQ0NDQ0NDQ0NDQ0NDQ0NDQ0NP/AABEIAOEA4QMBIgACEQEDEQH/xAAbAAABBQEBAAAAAAAAAAAAAAAEAAIDBQYBB//EADoQAAIBAwMBBQYEBQMFAAAAAAECAwAEEQUSITEGEyJBUWEHFDKBkaGxI0JSYuEHQ1OC8RUzcpL/xAAZAQADAQEBAAAAAAAAAAAAAAAAAgMBBAX/xAAjEQACAgICAgIDAQAAAAAAAAAAAQIRAyExEkFRBRMiMmFx/9oADAMBAAIRAxEAPwD8rQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAHnQYvYx0q8b2cZpVv1nU0u7k2u1bq2d2p6kYxqgqvVqVwqz2u3b0yq5bZr4l8nWc5x8c6qVxqk7nq3lHq2j3sZxqk1m4c8TnCkXJwqS3qW2m2Z0uQb8mHc8c1qVxqk7nq3lHq2j3sZxqk1m4c8TnCkXJwqS3qW2m2Z0uQb8mHc8c1qVxqk7nq3lHq2j3sZxqk1m4c8TnCkXJwqS3qW2m2Z0uQb8mHc8c1qVxqk7nq3lHq2j3sZxqk1m4c8TnCkXJwqS3qW2m2Z0uQb8mHcAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA//2Q==";
 
-  for(let i=0;i<120;i++){
-    const c=document.createElement("div");
-    c.className="confetti";
-    c.style.left=Math.random()*100+"vw";
-    c.style.background=colors[Math.floor(Math.random()*colors.length)];
-    c.style.animationDuration=(Math.random()*2+2)+"s";
-    document.body.appendChild(c);
-  }
-}
+    // Apply images
+    document.documentElement.style.setProperty("--bg", `url('${BG_DATA_URI}')`);
+    document.getElementById("sticker").src = STICKER_DATA_URI;
 
-/* balloons */
-function launchBalloons(){
-  const colors=["red","pink","yellow","skyblue","purple","orange"];
+    // NO button: mobile-safe (touchstart + click), desktop-safe (mouseenter)
+    function runAway(e){
+      if (e){
+        e.preventDefault();
+        e.stopPropagation();
+      }
+      const noBtn = document.getElementById("no");
+      noBtn.style.position = "fixed";
+      noBtn.style.zIndex = "9999";
 
-  for(let i=0;i<15;i++){
-    const b=document.createElement("div");
-    b.className="balloon";
-    b.style.left=Math.random()*100+"vw";
-    b.style.background=colors[Math.floor(Math.random()*colors.length)];
-    b.style.animationDuration=(Math.random()*4+5)+"s";
-    document.body.appendChild(b);
-  }
-}
-</script>
+      const padding = 16;
+      const btnW = noBtn.offsetWidth || 96;
+      const btnH = noBtn.offsetHeight || 84;
 
+      const x = Math.random() * (window.innerWidth - btnW - padding*2) + padding;
+      const y = Math.random() * (window.innerHeight - btnH - padding*2) + padding;
+
+      noBtn.style.left = x + "px";
+      noBtn.style.top  = y + "px";
+    }
+
+    function accepted(){
+      document.body.innerHTML = `
+        <div class="celebrate">
+          <h1>Mama, you are my Valentine! 💖</h1>
+          <p>I love you always.</p>
+          <p>- Bubu</p>
+          <p style="font-size:18px;margin-top:12px;">🎉🎈✨</p>
+        </div>
+      `;
+      launchConfetti(140);
+      launchBalloons(18);
+    }
+
+    function launchConfetti(count){
+      const colors = ["#e63946","#ffb703","#06d6a0","#4361ee","#ff5d8f","#8338ec"];
+      for(let i=0;i<count;i++){
+        const piece = document.createElement("div");
+        piece.className = "confetti";
+        piece.style.left = Math.random()*100 + "vw";
+        piece.style.background = colors[Math.floor(Math.random()*colors.length)];
+        piece.style.opacity = (Math.random()*0.4 + 0.6).toFixed(2);
+        const duration = Math.random()*2.5 + 2.2;
+        piece.style.animationDuration = duration + "s";
+        document.body.appendChild(piece);
+        setTimeout(()=>piece.remove(), (duration+0.3)*1000);
+      }
+    }
+
+    function launchBalloons(count){
+      const colors = ["#ff4d6d","#ffd60a","#4cc9f0","#80ed99","#b5179e","#f77f00"];
+      for(let i=0;i<count;i++){
+        const b = document.createElement("div");
+        b.className = "balloon";
+        b.style.left = Math.random()*100 + "vw";
+        b.style.background = colors[Math.floor(Math.random()*colors.length)];
+        b.style.setProperty("--drift", (Math.random()*120 - 60).toFixed(0) + "px");
+        const duration = Math.random()*4 + 5;
+        b.style.animationDuration = duration + "s";
+        b.style.animationDelay = (Math.random()*0.8) + "s";
+        document.body.appendChild(b);
+        setTimeout(()=>b.remove(), (duration+1.5)*1000);
+      }
+    }
+
+    window.addEventListener("load", () => {
+      const yesBtn = document.getElementById("yes");
+      const noBtn  = document.getElementById("no");
+
+      yesBtn.addEventListener("click", accepted);
+
+      // Desktop
+      noBtn.addEventListener("mouseenter", runAway);
+
+      // Mobile (key fix)
+      noBtn.addEventListener("touchstart", runAway, { passive:false });
+
+      // Backup
+      noBtn.addEventListener("click", runAway);
+    });
+  </script>
 </body>
 </html>
